@@ -19,6 +19,11 @@
 	<script type="text/javascript" src="js/bootstrap.min.js"></script>
 	
  <br>
+ <div class="navbar-header pull-right">
+ <form action="logout" method="get">
+ <input type="submit" value="logout" >
+ </form>
+ </div>
  <form method="get" action="manager">
  <div class="container">
 	<div class="row">

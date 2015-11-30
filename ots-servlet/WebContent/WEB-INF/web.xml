@@ -38,6 +38,6 @@
   </servlet>
   <servlet>
     <servlet-name>Accept</servlet-name>
-    <servlet-class>Accept_reject</servlet-class>
+    <servlet-class>Approve_Trans</servlet-class>
   </servlet>
 </web-app>

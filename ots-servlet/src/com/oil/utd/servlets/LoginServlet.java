@@ -24,8 +24,8 @@ import com.oil.utd.util.Login;
 
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
-	int client_id;
-	int trader_id;
+	int cID;
+	int tID;
 	String trader_name;
 	private static final long serialVersionUID = 1L;
 	Connection con = null;
@@ -41,7 +41,7 @@ public class LoginServlet extends HttpServlet {
 		String password = request.getParameter("pwd");
 		int role;
 		System.out.println(request.getParameter("user") + " "
-				+ request.getParameter("pwd"));
+				+ request.getParameter("pwd")+ request.getParameter("myradio"));
 
 		con = (Connection) getServletContext().getAttribute(
 				"DBConnection");
@@ -71,7 +71,7 @@ public class LoginServlet extends HttpServlet {
 					ps2.setString(1, userid);
 					rs2 = ps2.executeQuery();
 					if(rs2!=null && rs2.next()){
-						client_id = Integer.parseInt(rs2.getString(1));
+						cID = Integer.parseInt(rs2.getString(1));
 						session.setAttribute("Client_name", rs2.getString(1));
 						System.out.println(rs2.getString(1));
 					}
@@ -87,7 +87,7 @@ public class LoginServlet extends HttpServlet {
 					
 					String q5 = "select comrate from clienttype c,belongsto b where b.clientid=(?) and c.category = b.category";
 					ps = con.prepareStatement(q5);
-					ps.setInt(1, client_id);
+					ps.setInt(1, cID);
 					rs = ps.executeQuery();
 					if(rs!=null && rs.next()){
 						session.setAttribute("com_rate", rs.getDouble(1));
@@ -109,7 +109,7 @@ public class LoginServlet extends HttpServlet {
 					
 					String q3 = "select oilbalance, cashbalance from client where id=(?) limit 1";
 					ps = con.prepareStatement(q3);
-					ps.setInt(1, client_id);
+					ps.setInt(1, cID);
 					rs = ps.executeQuery();
 					if(rs!=null && rs.next()){
 					 
@@ -129,7 +129,7 @@ public class LoginServlet extends HttpServlet {
 					ps2.setString(1, userid);
 					rs2 = ps2.executeQuery();
 					if(rs2!=null && rs2.next()){
-						trader_id = Integer.parseInt(rs2.getString(1));
+						tID = Integer.parseInt(rs2.getString(1));
 						session.setAttribute("trader_id", rs2.getString(1));
 						System.out.println(rs2.getString(1));
 					}

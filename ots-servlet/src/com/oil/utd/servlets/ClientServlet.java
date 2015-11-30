@@ -5,6 +5,9 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -15,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.mysql.jdbc.Statement;
+
 
 
 @WebServlet("/client")
@@ -79,17 +83,19 @@ public class ClientServlet extends HttpServlet {
 			String tradername = request.getParameter("tradername");
 			
 			Transaction t = new Transaction();
-			t.setBuy_sell(buysell);
+			t.setBuyORSell(buysell);
 			t.setQuantity(quantity);
-			t.setComtype(comtype);
+			t.setCommissionType(comtype);
 			double cost_of_trans = (quantity*ppb);
-			t.setCost_transation(cost_of_trans);
+			t.setTransCost(cost_of_trans);
 			
 			String ins_query = "INSERT INTO transaction (quantity, buy_sell, cost_of_transaction, comtype) VALUES (?,?,?,?)";
-			String ins_hist = "INSERT INTO client_trader_transaction_history(client_id, trader_id, transaction_id, cost_of_transaction, com_charge) VALUES (?,?,?,?,?)";
+			String ins_hist = "INSERT INTO client_trader_transaction_history(client_id, trader_id, transaction_id, date, cost_of_transaction, com_charge) VALUES (?,?,?,?,?,?)";
 			Connection con1 = (Connection) getServletContext().getAttribute("DBConnection");
 			//System.out.println("am here!!");
-			
+			DateFormat df = new SimpleDateFormat("YYYY-MM-dd");
+		    Date dateobj = new Date();
+		    System.out.println(df.format(dateobj));
 		if(buysell.equals("b"))	{
 			//check cash balance
 			if(client_cash_bal >= cost_of_trans){
@@ -139,17 +145,17 @@ public class ClientServlet extends HttpServlet {
 						ps.setInt(2, 5);//put trader id of populated 
 						System.out.println("temporary trader");
 					}
-					//ps.setDate(4, x);//date
+					ps.setString(4, df.format(dateobj));//date
 					
-					ps.setDouble(4, cost_of_trans);//cost_of transaction
+					ps.setDouble(5, cost_of_trans);//cost_of transaction
 					System.out.println("cost of trans is id "+cost_of_trans);
 					if(c_type.equals("Cash")){
-					ps.setDouble(5, cost_of_trans*.2);//com_charge
+					ps.setDouble(6, cost_of_trans*.2);//com_charge
 					System.out.println("comissin is id "+ cost_of_trans*.2);
 					
 					}
 					else{
-						ps.setDouble(5, quantity*.2);//com_charge
+						ps.setDouble(6, quantity*.2);//com_charge
 						System.out.println("comissin in liter"+ quantity*.2);
 						
 					}
@@ -222,17 +228,17 @@ public class ClientServlet extends HttpServlet {
 						ps.setInt(2, 1);//put trader id of populated 
 						System.out.println("temporary trader");
 					}
-					//ps.setDate(4, x);//date
+					ps.setString(4, df.format(dateobj));//date
 					
-					ps.setDouble(4, cost_of_trans);//cost_of transaction
+					ps.setDouble(5, cost_of_trans);//cost_of transaction
 					System.out.println("cost of trans is id "+cost_of_trans);
 					if(c_type.equals("Cash")){
-					ps.setDouble(5, cost_of_trans*.2);//com_charge
+					ps.setDouble(6, cost_of_trans*.2);//com_charge
 					System.out.println("comissin is: "+ cost_of_trans*.2 +"$ or Barrels");
 					
 					}
 					else{
-						ps.setDouble(5, quantity*.2);//com_charge
+						ps.setDouble(6, quantity*.2);//com_charge
 						System.out.println("comissin in liter"+ quantity*.2);
 						
 					}

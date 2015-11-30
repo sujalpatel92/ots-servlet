@@ -45,7 +45,7 @@ out.println(traderName);%>
 						
 					<div class="form-group">
                         
-						<a href="accept_reject.jsp" role="button" class="btn btn-primary btn-large">Accept/Reject a Transaction</a>
+						<a href="approve_trans.jsp" role="button" class="btn btn-primary btn-large">Accept/Reject a Transaction</a>
 						<br>
 						<br>
 						<a href="search.jsp" role="button" class="btn btn-primary btn-large">Search Client</a>

@@ -154,7 +154,7 @@ function aler(cid) {
 	  var set_one_settledflag = 1;
 	  var data = client_id + tl +set_one_settledflag;
 	  alert(data);
-	  $.get("http://localhost:8080/tryout_odb/settr",{"param2": data});
+	  $.get("http://localhost:9090/ots-servlet/settletransaction.jsp",{"param2": data});
 }
 </script>
 

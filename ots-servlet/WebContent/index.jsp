@@ -40,6 +40,11 @@
         
         <label for="inputPassword"   class="sr-only">Password</label>
         <input type="password" name="pwd" id="inputPassword" class="form-control" placeholder="Password" required>
+        <br/>Select your Role:
+        <input type="radio" name="myradio" value="0" required/>Client
+        <input type="radio" name="myradio" value="1" required/>Trader
+        <input type="radio" name="myradio" value="2" required/>Manager
+        <br/>
         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
       </form>
 
