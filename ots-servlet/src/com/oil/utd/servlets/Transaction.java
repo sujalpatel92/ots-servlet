@@ -3,7 +3,7 @@ package com.oil.utd.servlets;
 public class Transaction {
     private int id;
     private double qty;
-    private String buyORsell;
+    private int buyORsell;
     private int commissionType;
     private double transCost;
 	
@@ -20,10 +20,10 @@ public class Transaction {
 		this.qty = quantity;
 	}
 	
-	public String getBuyORSell() {
+	public int getBuyORSell() {
 		return buyORsell;
 	}
-	public void setBuyORSell(String buy_sell) {
+	public void setBuyORSell(int buy_sell) {
 		this.buyORsell = buy_sell;
 	}
 	public double getTransCost() {

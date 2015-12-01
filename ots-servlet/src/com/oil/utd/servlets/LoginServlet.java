@@ -27,7 +27,6 @@ public class LoginServlet extends HttpServlet {
 	int cID;
 	int tID;
 	String trader_name;
-	private static final long serialVersionUID = 1L;
 	Connection con = null;
     
 	public LoginServlet() {
@@ -39,112 +38,108 @@ public class LoginServlet extends HttpServlet {
 			HttpServletResponse response) throws ServletException, IOException {
 		String userid = request.getParameter("user");
 		String password = request.getParameter("pwd");
+		int roleInp = Integer.parseInt(request.getParameter("myradio"));
 		int role;
 		System.out.println(request.getParameter("user") + " "
 				+ request.getParameter("pwd")+ request.getParameter("myradio"));
 
 		con = (Connection) getServletContext().getAttribute(
 				"DBConnection");
-		PreparedStatement ps = null;
-		PreparedStatement ps2 = null;
-		ResultSet rs2 = null;
-		ResultSet rs = null;
+		PreparedStatement statement1 = null;
+		PreparedStatement statement2 = null;
+		ResultSet set2 = null;
+		ResultSet set1 = null;
 
 		try {
-			ps = con.prepareStatement("select USERID, PASSWORD, ROLEID from login where USERID=? and PASSWORD=MD5(?) limit 1");
-			ps.setString(1, userid);
-			ps.setString(2, password);
-			rs = ps.executeQuery();
+			statement1 = con.prepareStatement("select uid, Password, role from auth where uid=? and Password=?");
+			statement1.setString(1, userid);
+			statement1.setString(2, password);
+			set1 = statement1.executeQuery();
 
-			if (rs != null && rs.next()) {
-				Login l = new Login();
-				l.setUserID(rs.getString(1));
-				role = rs.getInt(3);
-				l.setRoleType(rs.getInt(3));
-				System.out.println("Logged User: " + l.toString()
+			if (set1 != null && set1.next()) {
+				Login login = new Login();
+				login.setUserID(set1.getString(1));
+				role = set1.getInt(3);
+				if(role!=roleInp)
+				{
+					RequestDispatcher rd1 = getServletContext().getRequestDispatcher("/index.jsp");
+					PrintWriter out = response.getWriter();
+					out.println("<font color=red>Incorrect role selected.Please try again.</font>");
+					rd1.include(request, response);
+				}
+				login.setRoleType(set1.getInt(3));
+				System.out.println("Logged User: " + login.toString()
 						+ "Client id : ");
+				
 				HttpSession session = request.getSession(true);
 				session.setAttribute("User", userid);
-				if (role == 1) {
+				
+				if (role == 0) {
+					//client
+					
 					System.out.println("here"+role);
-					ps2 = con.prepareStatement("select id from client where userid=?");
-					ps2.setString(1, userid);
-					rs2 = ps2.executeQuery();
-					if(rs2!=null && rs2.next()){
-						cID = Integer.parseInt(rs2.getString(1));
-						session.setAttribute("Client_name", rs2.getString(1));
-						System.out.println(rs2.getString(1));
+					statement2 = con.prepareStatement("select First_name from client where Cid=?");
+					statement2.setString(1, userid);
+					set2 = statement2.executeQuery();
+					if(set2!=null && set2.next()){
+						//cID = Integer.parseInt(set2.getString(1));
+						session.setAttribute("Client_name", set2.getString(1));
+						System.out.println(set2.getString(1));
 					}
 					
-					//String q2 = "select priceperbarrel from inventory";
-					//double ppb;
-					ps = con.prepareStatement("select priceperbarrel from inventory limit 1");
-					rs = ps.executeQuery();
-					if(rs!=null && rs.next()){
-						System.out.println("Price Ber Barrel"+rs.getDouble(1));
-						session.setAttribute("ppb", rs.getDouble(1));
-					}
+			session.setAttribute("ppb", (double)63.0);
 					
-					String q5 = "select comrate from clienttype c,belongsto b where b.clientid=(?) and c.category = b.category";
-					ps = con.prepareStatement(q5);
-					ps.setInt(1, cID);
-					rs = ps.executeQuery();
-					if(rs!=null && rs.next()){
-						session.setAttribute("com_rate", rs.getDouble(1));
+					String getCommissionRate = "select Level from client where Cid=(?)";
+					statement1 = con.prepareStatement(getCommissionRate);
+					statement1.setInt(1, Integer.parseInt(userid));
+					set1 = statement1.executeQuery();
+					if(set1!=null && set1.next()){
+						if(set1.getString(1).equals("Gold"))
+							session.setAttribute("com_rate", 0.10);
+						else
+							session.setAttribute("com_rate", 0.20);
 					}
 					
 					
-					String q6 = "select id,name from trader";
-					ArrayList<String> traderList = new ArrayList<String>();
-					ps = con.prepareStatement(q6);
-					rs = ps.executeQuery();
-					while(rs!=null && rs.next()){
-					traderList.add(rs.getString(2));
-					//String trader_name = rs.getString(2);
-					//System.out.println("Trader neme: "+trader_name);
-					}
 					
-					request.setAttribute("availabtraders", traderList);
-					System.out.println("Trader names: "+traderList.toString());
-					
-					String q3 = "select oilbalance, cashbalance from client where id=(?) limit 1";
-					ps = con.prepareStatement(q3);
-					ps.setInt(1, cID);
-					rs = ps.executeQuery();
-					if(rs!=null && rs.next()){
+					String getOil = "select Oil_owned from client where Cid=(?) limit 1";
+					statement1 = con.prepareStatement(getOil);
+					statement1.setInt(1, Integer.parseInt(userid));
+					set1 = statement1.executeQuery();
+					if(set1!=null && set1.next()){
 					 
-					session.setAttribute("oil_balance", rs.getString(1));
-					session.setAttribute("cash_balance", rs.getString(2));
-					System.out.println("Oil bal "+rs.getString(1));
+					session.setAttribute("oil_balance", set1.getString(1));
+					System.out.println("Oil bal "+set1.getString(1));
 					//response.sendRedirect("home.jsp");
 					response.sendRedirect("client_home.jsp");
 					}
 					
 					
 					
-				} else if (role == 2) {
+				} else if (role == 1) {
+					//trader
 					
-					
-					ps2 = con.prepareStatement("select id from trader where userid=?");
-					ps2.setString(1, userid);
-					rs2 = ps2.executeQuery();
-					if(rs2!=null && rs2.next()){
-						tID = Integer.parseInt(rs2.getString(1));
-						session.setAttribute("trader_id", rs2.getString(1));
-						System.out.println(rs2.getString(1));
+					statement2 = con.prepareStatement("select Trader_name from trader where Trader_id=?");
+					statement2.setString(1, userid);
+					set2 = statement2.executeQuery();
+					if(set2!=null && set2.next()){
+						//tID = Integer.parseInt(set2.getString(1));
+						session.setAttribute("trader_id", set2.getString(1));
+						System.out.println(set2.getString(1));
 					}
 					response.sendRedirect("trader.jsp");
 					
 				}
 				
-				else if (role == 3) {
+				else if (role == 2) {
+					//manager
 					response.sendRedirect("manager_main.jsp");
 				}
 			} else {
 				RequestDispatcher rd = getServletContext()
 						.getRequestDispatcher("/index.jsp");
 				PrintWriter out = response.getWriter();
-				out.println("<font color=red>No user found with given email id, please register first.</font>");
+				out.println("<font color=red>No user found with given id, please register first.</font>");
 				rd.include(request, response);
 			}
 		} catch (SQLException e) {
@@ -153,8 +148,8 @@ public class LoginServlet extends HttpServlet {
 		} finally {
 			try {
 				
-				rs.close();
-				ps.close();
+				set1.close();
+				statement1.close();
 				//con.close();
 			} catch (SQLException e) {
 				System.out.println("ERrror Here");

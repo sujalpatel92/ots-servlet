@@ -2,6 +2,7 @@ package com.oil.utd.servlets;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
@@ -21,10 +22,9 @@ import javax.servlet.jsp.jstl.sql.ResultSupport;
  */
 @WebServlet("/manager")
 public class Manager extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-	String mgr_query = "SELECT * FROM client_trader_transaction_history WHERE (date >= ? AND date <= ?)";
-	Timestamp fromdate;
-	Timestamp todate;
+	String mgr_query = "SELECT * FROM transaction WHERE (Trans_date >= ? AND Trans_date <= ?)";
+	Date fromdate;
+	Date todate;
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -36,7 +36,7 @@ public class Manager extends HttpServlet {
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		System.out.println("data got frm jsp manger: "+ request.getParameter("fromdate").toString() + "to date: "+request.getParameter("todate"));
+		
 
 		
 		try {
@@ -50,15 +50,15 @@ public class Manager extends HttpServlet {
 			@SuppressWarnings("unused")
 			HttpSession session = request.getSession();
 			
-			String frm = request.getParameter("fromdate").toString() + " 00:00:00";
-			String to = request.getParameter("todate").toString()+" 00:00:00";
+			String frm = request.getParameter("fromdate").toString();
+			String to = request.getParameter("todate").toString();
 			
-			fromdate = Timestamp.valueOf(frm);
-			todate = Timestamp.valueOf(to);
+			fromdate = Date.valueOf(frm);
+			todate = Date.valueOf(to);
 			
 			ps = con1.prepareStatement(mgr_query);
-			ps.setTimestamp(1, fromdate);
-			ps.setTimestamp(2, todate);
+			ps.setDate(1, fromdate);
+			ps.setDate(2, todate);
 			rs = ps.executeQuery();
 			System.out.println("Result"+ rs.toString());
 			

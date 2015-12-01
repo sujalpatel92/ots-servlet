@@ -21,11 +21,10 @@ import org.apache.commons.lang.ArrayUtils;
  */
 @WebServlet("/settletransaction")
 public class SettleTransaction extends HttpServlet {
-	private static final long serialVersionUID = 1L;
        int client_id;
        int set_one_settledflag;
        //ArrayList<Integer> tlist ;
-      // String query = "SELECT date,t.id transaction_id,t.quantity,(CASE WHEN buy_sell like 'b%' THEN \"Bought\" ELSE \"Sold\" END) As Buy_Sell, t.cost_of_transaction,h.com_charge, (CASE WHEN comtype <> 0 THEN 'Cash' ELSE 'Oil' END) As Comission_Mode,\r\n(CASE \r\nWHEN h.settled_flag = 1 THEN 'Check view status'\r\nWHEN h.settled_flag = 0 THEN 'Applied'\r\nWHEN h.settled_flag = 2 THEN 'Accpeted'\r\nWHEN h.settled_flag = 3 THEN 'Rejected'\r\nEND\r\n)As Settlement FROM transaction t, client_trader_transaction_history h where t.id=h.transaction_id and client_id=? and h.settled_flag in (0,1)";
+      // String query = "SELECT date,t.id transaction_id,t.quantity,(CASE WHEN buy_sell like 'b%' THEN \"Bought\" ELSE \"Sold\" END) As Buy_Sell, t.cost_of_transaction,h.com_charge, (CASE WHEN commission_type <> 0 THEN 'Cash' ELSE 'Oil' END) As Comission_Mode,\r\n(CASE \r\nWHEN h.settled_flag = 1 THEN 'Check view status'\r\nWHEN h.settled_flag = 0 THEN 'Applied'\r\nWHEN h.settled_flag = 2 THEN 'Accpeted'\r\nWHEN h.settled_flag = 3 THEN 'Rejected'\r\nEND\r\n)As Settlement FROM transaction t, client_trader_transaction_history h where t.id=h.transaction_id and client_id=? and h.settled_flag in (0,1)";
       String query = "update client_trader_transaction_history set settled_flag=1 where client_id=? and transaction_id=?";
    
     public SettleTransaction() {
@@ -87,27 +86,10 @@ public class SettleTransaction extends HttpServlet {
 				}
 				
 			}
-			/*Array arra = con.createArrayOf("INTEGER", ArrayUtils.toObject(i_tlist));
 			
-			System.out.println("Hellowol  2 ");
-			ps.setInt(1, client_id);
-			ps.setArray(2, arra );
-			
-			rs = ps.executeQuery();
-			
-			if(rs.next()){
-			System.out.println(rs.getString(8));*/
-			
-			//Result result = ResultSupport.toResult(rs);
-	       // request.setAttribute("result", result);
-	       // RequestDispatcher rd = request.getRequestDispatcher("/st.jsp");
-	        //RequestDispatcher rd = request.getRequestDispatcher("/st.jsp");
 			PrintWriter out = response.getWriter();
 			out.println("<font color=red>No user found with given email id, please register first.</font>");
-			//rd.forward(request, response);*/
-			//request.getRequestDispatcher("/st.jsp").forward(request, response);
-			// }
-			//}
+			
 		}
 		catch (Exception e) {
 			System.out.println("Errorrrr in Setteletr   "+e);

@@ -18,15 +18,15 @@
 <%@ page import="java.io.*" %>
 
 <%
-String name1 = session.getAttribute("Client_name").toString();
+String name1 = session.getAttribute("User").toString();
 int client_id1 = Integer.valueOf(name1);
 out.println("<p>Client id here is:"+client_id1+"</p>");
 
 %>
 <%
-    String name = session.getAttribute("Client_name").toString();
+    String name = session.getAttribute("User").toString();
 	int client_id = Integer.valueOf(name);
-	String query = "select * from client_trader_transaction_history";
+	String query = "select SUM(Cash_owed), SUM(Cash_paid) from transaction where Cid=";
    
     
 %>

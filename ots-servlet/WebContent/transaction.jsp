@@ -87,7 +87,6 @@
 <%HttpSession s1 = request.getSession();
 String ppb = s1.getAttribute("ppb").toString();
 String com_rate = s1.getAttribute("com_rate").toString();
-ArrayList<String> traderlist = (ArrayList<String>) s1.getAttribute("traderList");
 %>
  <br>
  <form class=" submitbut" method="get" action="client" role="form">
@@ -114,7 +113,7 @@ ArrayList<String> traderlist = (ArrayList<String>) s1.getAttribute("traderList")
 					<br>
 					<br>
 					<div class="form-group">
-                        <label for="comissionstatus" class="col-sm-4 control-label">Comission Mode</label>
+                        <label for="comissionstatus" class="col-sm-4 control-label">Commission Mode</label>
                         <div class="col-sm-5">
                             <select class="form-control" id="comissionstatus" name="comissionstatus" onchange="updateCommision(this)">
                                 <option value="Cash">Cash</option>
@@ -134,52 +133,52 @@ ArrayList<String> traderlist = (ArrayList<String>) s1.getAttribute("traderList")
 					<div class="form-group" style="display:none;" id="choice" >
                         <label for="tradername"  class="col-sm-4 control-label">Choose Trader</label>
                         <div class="col-sm-5">
-                            <select class="form-control" array="traderlist" name="tradername" onchange="updateTradername(this)">
-                                <option value="mark">mark</option>
-                                <option value="Steve Smith">Steve Smith</option>
+<!--                             <select class="form-control" array="traderlist" name="tradername" onchange="updateTradername(this)"> -->
+<!--                                 <option value="mark">mark</option> -->
+<!--                                 <option value="Steve Smith">Steve Smith</option> -->
                                 
                                 <%-- 
 									    <c:forEach var="trader" items="${traderlist}">
 									        <option><c:out value="${trader}"/></option>
 									    </c:forEach> --%>
 								
-                            </select>
+<!--                             </select> -->
                         </div>
                     </div>
                      
                    </div>
             </div>            
         </div> <!-- / panel preview -->
-        <div class="col-sm-10">
-            <h4>Review Order:</h4>
-            <div class="row">
-                <div class="col-xs-12">
-                    <div class="table-responsive">
-                        <table class="table preview-table">
-                            <thead>
-                                <tr>
-                                    <th>Buy/Sell</th>
-                                    <th>Quantity</th>
-									<th>Price per Barrel</th>
-                                    <th>Commission %</th>
-                                    <th>Commission Mode</th>
-									<th>Transaction Type</th>
+<!--         <div class="col-sm-10"> -->
+<!--             <h4>Review Order:</h4> -->
+<!--             <div class="row"> -->
+<!--                 <div class="col-xs-12"> -->
+<!--                     <div class="table-responsive"> -->
+<!--                         <table class="table preview-table"> -->
+<!--                             <thead> -->
+<!--                                 <tr> -->
+<!--                                     <th>Buy/Sell</th> -->
+<!--                                     <th>Quantity</th> -->
+<!-- 									<th>Price per Barrel</th> -->
+<!--                                     <th>Commission %</th> -->
+<!--                                     <th>Commission Mode</th> -->
+<!-- 									<th>Transaction Type</th> -->
 									                                   
-                                </tr>
-								<tr>
-									<td id="opt">Buy</td>
-									<td id="qty"></td>
-									<td id="ppb"><% out.print(ppb);%></td>
-									<td id="commi"> <% out.print(com_rate);%> </td>
-									<td id="mode">Cash</td>
-									<td id="type">Self</td>
-								</tr>
-                            </thead>
-                            <tbody></tbody> <!-- preview content goes here-->
-                        </table>
-                    </div>                            
-                </div>
-            </div>
+<!--                                 </tr> -->
+<!-- 								<tr> -->
+<!-- 									<td id="opt">Buy</td> -->
+<!-- 									<td id="qty"></td> -->
+<%-- 									<td id="ppb"><% out.print(ppb);%></td> --%>
+<%-- 									<td id="commi"> <% out.print(com_rate);%> </td> --%>
+<!-- 									<td id="mode">Cash</td> -->
+<!-- 									<td id="type">Self</td> -->
+<!-- 								</tr> -->
+<!--                             </thead> -->
+<!--                             <tbody></tbody> preview content goes here -->
+<!--                         </table> -->
+<!--                     </div>                             -->
+<!--                 </div> -->
+<!--             </div> -->
             <div class="row text-left">
                 <div class="col-xs-12">
                     <h4>Total: <strong><span class="preview-total">  <%=request.getAttribute("total")%> </span></strong></h4>

@@ -31,9 +31,8 @@
            <%HttpSession s1 = request.getSession();
 String userName = s1.getAttribute("User").toString();
 String oil_bal = s1.getAttribute("oil_balance").toString();
-String cash_bal = s1.getAttribute("cash_balance").toString();
 String cname = s1.getAttribute("Client_name").toString();
-out.println(userName);%>
+out.println(cname);%>
 
 
 <!-- //out.println("<input type='text' value='"+cname+"'>");%> -->
@@ -48,21 +47,16 @@ out.println(userName);%>
 					<div class="form-group">
                         
 						<a href="transaction.jsp" role="button" class="btn btn-primary btn-large">Make a Transaction</a>
-						<a href="st.jsp" role="button" class="btn btn-primary btn-large">   Settle Dues  </a>
-						<a href="viewstatus.jsp" role="button" class="btn btn-primary ">View Status</a>
+<!-- 						<a href="settletransaction.jsp" role="button" class="btn btn-primary btn-large">   Settle Dues  </a> -->
+<!-- 						<a href="viewstatus.jsp" role="button" class="btn btn-primary ">View Status</a> -->
 						
 						<br>
 						
 						<br>
                         <!-- <h4 id=" status"> Account Type :</h4> -->
 						<h4 id=" oilbal">Your Oil Balance   :  <% out.print(oil_bal); %> </h4>
-						<h4 id=" cashbal">Your Cash Balance :  <%out.print(cash_bal); %></h4>
-						
-                    </div>
-					
-					
-                     
                    </div>
+               </div>
             </div>            
         </div> 
         </div>

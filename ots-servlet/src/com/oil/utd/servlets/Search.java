@@ -26,14 +26,9 @@ public class Search extends HttpServlet {
 	String czip;
 	int choiceid;
 
-	private static final long serialVersionUID = 1L;
 
 	String search_query1 = "SELECT * FROM client  WHERE id=?";
-	/*String search_query2 = "select c.id, c.userid, c.fname, c.lname, c.emailid, c.cellnum, c.phnum, c.oilbalance, c.cashbalance"
-			+ " from client c, livesin l\r\n"
-			+ "where l.stname like \"%?%\"\r\n" 
-			+ "and l.clientid=c.id";
-			*/
+
 	String search_query2 = "select c.id, c.userid, c.fname, c.lname, c.emailid, c.cellnum, c.phnum, c.oilbalance, c.cashbalance from client c, livesin l where l.stname like ? and l.clientid=c.id";
 	String search_query3 = "select c.id, c.userid, c.fname, c.lname, c.emailid, c.cellnum, c.phnum, c.oilbalance, c.cashbalance\r\n"
 			+ "from address a, client c, livesin l\r\n"

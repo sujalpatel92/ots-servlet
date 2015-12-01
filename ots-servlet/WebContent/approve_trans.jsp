@@ -90,7 +90,7 @@ cnfex.printStackTrace();
 }
 
 //String sql = "SELECT date,t.id transaction_id,t.quantity,(CASE WHEN buy_sell like 'b%' THEN \"Bought\" ELSE \"Sold\" END) As Buy_Sell ,\r\nt.cost_of_transaction,h.com_charge, (CASE WHEN comtype <> 0 THEN 'Cash' ELSE 'Oil' END) As Comission_Mode,\r\n(CASE WHEN h.settled_flag = 1 THEN 'Applied for settlement' ELSE 'Client_has_Not_Yet_Applied_for_settlement' END) As Settlement\r\n ,h.client_id client_id FROM transaction t, client_trader_transaction_history h \r\nwhere t.id=h.transaction_id ";
-String sql = "SELECT date,t.id transaction_id,t.quantity,(CASE WHEN buy_sell like 'b%' THEN \"Bought\" ELSE \"Sold\" END) As Buy_Sell ,\r\nt.cost_of_transaction,h.com_charge, (CASE WHEN comtype <> 0 THEN 'Cash' ELSE 'Oil' END) As Comission_Mode,\r\n(CASE WHEN h.settled_flag = 1 THEN 'Applied for settlement' ELSE 'Client_has_Not_Yet_Applied_for_settlement' END) As Settlement\r\n ,h.client_id client_id FROM transaction t, client_trader_transaction_history h \r\nwhere t.id=h.transaction_id and h.settled_flag not in (2,3)";
+String sql = "SELECT Transid,Oil_amt, Trans_date,Cash_owed,(CASE WHEN Trans_type like '0' THEN \"Bought\" ELSE \"Sold\" END) As Buy_Sell,\r\n(CASE WHEN dues_settled like 'Y' THEN 'Applied for settlement' ELSE 'Not_settled' END) As Settlement\r\n ,Cid FROM transaction where Status='Pending'";
 		
 		try{
 pst = con.prepareStatement(sql);
@@ -110,13 +110,11 @@ rs = pst.executeQuery();
 <table class="table table-bordered table-condensed table-stripped">
 <tr>
    
-   <th>Date</th>
    <th>Transaction ID</th>
    <th>Quantity</th>
-   <th>Bought_Or_Sold</th>
-   <th>Cost</th>
+   <th>Date</th>
    <th>Commission</th>
-   <th>Comission_Mode</th>
+   <th>Bought_Or_Sold</th>
    <th>Settled_Or_NotSettled</th>
    <th>Client_id</th>
    <th>Accept/Reject</th>
@@ -127,15 +125,13 @@ while( rs!=null && rs.next() ){
 %>
 <tr>
 
-	<td class="c1"><%= rs.getTimestamp(1) %></td>
-	<td class="c2"><%= rs.getInt(2) %></td>
-	<td class="c3"><%= rs.getDouble(3) %></td>
-	<td class="c4"><%= rs.getString(4) %></td>
-	<td class="c5"><%= rs.getDouble(5) %></td>
-	<td class="c6"><%= rs.getDouble(6) %></td>
-	<td class="c7"><%= rs.getString(7) %></td>
-	<td class="c8"><%= rs.getString(8) %></td>
-	<td class="c9"><%= rs.getString(9) %></td>
+	<td class="c1"><%= rs.getInt(1) %></td>
+	<td class="c2"><%= rs.getDouble(2) %></td>
+	<td class="c3"><%= rs.getDate(3) %></td>
+	<td class="c4"><%= rs.getDouble(4) %></td>
+	<td class="c5"><%= rs.getString(5) %></td>
+	<td class="c6"><%= rs.getString(6) %></td>
+	<td class="c7"><%= rs.getInt(7) %></td>
 	
 	<td><button id='1-<%=rs.getInt(2)%>' class="use-address"  name="accept" onclick="butfunc(this); disableFunction(<%=rs.getInt(2)%>); ">Accept</button>     <button id='2-<%=rs.getInt(2)%>' type="button" class="use-address" name="reject" onclick="butfunc(this);" onclick="disableFunction(<%=rs.getInt(2)%>); ">Reject</button></td>
 
@@ -156,12 +152,6 @@ if(con!=null) con.close();
 
 %>
 
-<%out.println("<font size=\"4\" color=red>Note:</font>");%>
-<br/>
-<%out.println("<font size=\"4\" color=red>If Comission_mode is Cash : then cash balance will be debited from your account</font>");%>
-<br/>
-<%out.println("<font size=\"4\" color=red>If Comission_mode is Oil  : then oil  balance will be debited from your account</font>");%>
-<br/>
 <br/>
 </body>
 </html>
