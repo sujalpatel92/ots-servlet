@@ -24,13 +24,18 @@ import com.mysql.jdbc.Statement;
 @WebServlet("/client")
 public class ClientServlet extends HttpServlet {
     
-	String query1 = "select id,name from trader";
-	String query2 = "select * from  inventory";
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	String getCommissionLevel = "select Level from client where Cid =?";
+	String getCashOwedTotal = "select SUM(Cash_owed),SUM(Cash_paid) from  transaction where dues_settled ='N' and Cid =?";
 	String query3 = "select oilbalance,cashbalance from client where id=(?)";
 	String query4 = "select category from belongsto where clientid=(?)";
 	int tid;
 	int commission_type;
-   
+    float com_rate;
     public ClientServlet() {
         super();
         
@@ -47,7 +52,7 @@ public class ClientServlet extends HttpServlet {
 			
 			HttpSession session = request.getSession();
 			
-			
+			com_rate = Float.valueOf(session.getAttribute("com_rate").toString());
 			int client_id = Integer.valueOf(session.getAttribute("User").toString());
 			double client_oil_bal = Double.valueOf(session.getAttribute("oil_balance").toString());
 			double ppb = Double.valueOf(session.getAttribute("ppb").toString());
@@ -113,15 +118,15 @@ public class ClientServlet extends HttpServlet {
 				System.out.println("cost of trans is id "+cost_of_trans);
 				
 				if(c_type.equals("Cash")){
-					statement.setDouble(4, cost_of_trans*.2);//com_charge
-				System.out.println("comissin is id "+ cost_of_trans*.2);
+					statement.setDouble(4, cost_of_trans*com_rate);//com_charge
+				System.out.println("comissin is id "+ cost_of_trans*com_rate);
 				statement.setString(7, "N");
 				}
 				else{
-					double rem_qty = quantity - quantity*0.2;
+					double rem_qty = quantity - quantity*com_rate;
 					statement.setDouble(2, rem_qty);//com_charge
 					statement.setDouble(4, 0);
-					System.out.println("comissin in liter"+ quantity*.2);
+					System.out.println("comissin in liter"+ quantity*com_rate);
 					statement.setString(7, "Y");
 				}
 				
@@ -140,10 +145,10 @@ public class ClientServlet extends HttpServlet {
 				statement = con1.prepareStatement(updateCommissionQuery , Statement.RETURN_GENERATED_KEYS);
 				statement.setInt(1, Integer.parseInt(lastid));
 				if(c_type.equals("Cash")){
-					statement.setDouble(2, cost_of_trans*.2);//com_charge
+					statement.setDouble(2, cost_of_trans*com_rate);//com_charge
 				}
 				else{
-					double rem_qty = quantity - quantity*0.2;
+					double rem_qty = quantity - quantity*com_rate;
 					statement.setDouble(2, rem_qty);//com_charge
 				}
 				statement.setDouble(3, ppb);
@@ -190,15 +195,15 @@ public class ClientServlet extends HttpServlet {
 				System.out.println("cost of trans is id "+cost_of_trans);
 				
 				if(c_type.equals("Cash")){
-					statement.setDouble(4, cost_of_trans*.2);//com_charge
-				System.out.println("comission is id "+ cost_of_trans*.2);
+					statement.setDouble(4, cost_of_trans*com_rate);//com_charge
+				System.out.println("comission is id "+ cost_of_trans*com_rate);
 				statement.setString(7, "N");
 				}
 				else{
-					double rem_qty = quantity - quantity*0.2;
+					double rem_qty = quantity - quantity*com_rate;
 					statement.setDouble(2, rem_qty);//com_charge
 					statement.setDouble(4, 0);
-					System.out.println("comissin in liter"+ quantity*.2);
+					System.out.println("comissin in liter"+ quantity*com_rate);
 					statement.setString(7, "Y");
 				}
 				
@@ -218,11 +223,11 @@ public class ClientServlet extends HttpServlet {
 				statement = con1.prepareStatement(updateCommissionQuery , Statement.RETURN_GENERATED_KEYS);
 				statement.setInt(1, Integer.parseInt(lastid1));
 				if(c_type.equals("Cash")){
-					statement.setDouble(2, cost_of_trans*.2);//com_charge
+					statement.setDouble(2, cost_of_trans*com_rate);//com_charge
 				}
 				else{
-					double rem_qty = quantity - quantity*0.2;
-					statement.setDouble(2, quantity*0.2);//com_charge
+					double rem_qty = quantity - quantity*com_rate;
+					statement.setDouble(2, quantity*com_rate);//com_charge
 				}
 				statement.setDouble(3, ppb);
 				statement.setInt(4, commissionType);
@@ -274,179 +279,5 @@ public class ClientServlet extends HttpServlet {
 
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-		
-		/*try {
-			
-			PreparedStatement ps = null;
-			ResultSet rs = null;
-			
-			HttpSession session = request.getSession();
-			
-			
-			int client_id = Integer.valueOf(session.getAttribute("Client_name").toString());
-			double client_cash_bal = Double.valueOf(session.getAttribute("cash_balance").toString());
-			double client_oil_bal = Double.valueOf(session.getAttribute("oil_balance").toString());
-			double ppb = Double.valueOf(session.getAttribute("ppb").toString());
-			String quan = request.getParameter("quantity");
-			String req = request.toString();
-			System.out.println("Oil quanti "+ quan);
-			
-			String buysell;
-			if(request.getParameter("buysell").equals("Buy")){
-				buysell = "b";
-			}
-			else{ buysell = "s";}
-			
-			int quantity=Integer.valueOf(request.getParameter("quantity"));
-			
-			String c_type = request.getParameter("comissionstatus");
-			if(c_type.equals("Cash")){
-				commission_type = 1;
-			}
-			else{
-				commission_type = 0;
-			}
-			//System.out.println(commission_type);
-			
-			
-			
-			String transactiontype= request.getParameter("transactiontype");
-			String tradername = request.getParameter("tradername");
-			
-			Transaction t = new Transaction();
-			t.setBuy_sell(buysell);
-			t.setQuantity(quantity);
-			t.setComtype(commission_type);
-			double cost_of_trans = (quantity*ppb);
-			t.setCost_transation(cost_of_trans);
-			
-			String ins_query = "INSERT INTO transaction (quantity, buy_sell, cost_of_transaction, commission_type) VALUES (?,?,?,?)";
-			String ins_hist = "INSERT INTO client_trader_transaction_history(client_id, trader_id, transaction_id, date, cost_of_transaction, com_charge) VALUES (?,?,?,?,?,?)";
-			Connection con1 = (Connection) getServletContext().getAttribute("DBConnection");
-			//System.out.println("am here!!");
-			
-		if(buysell.equals("b"))	{
-			//check cash balance
-			if(client_cash_bal >= cost_of_trans){
-			
-			ps = con1.prepareStatement(ins_query , Statement.RETURN_GENERATED_KEYS);
-			ps.setDouble(1, quantity);
-			ps.setString(2, buysell);
-			ps.setDouble(3, cost_of_trans);
-			ps.setInt(4, commission_type);
-			
-			
-				if(ps.execute()){
-					request.setAttribute("total", String.valueOf(cost_of_trans)+"additional commission charges as applicable");
-					session.setAttribute("total", cost_of_trans);
-					rs = ps.getGeneratedKeys();
-					if(rs.next()){
-						int tid = rs.getInt(1);
-					}
-			}else{
-				
-					rs = ps.getGeneratedKeys();
-					if(rs.next()){
-					tid = rs.getInt(1);
-					System.out.println("aEminem!"+ tid);
-					session.setAttribute("transaction_id", tid);
-					RequestDispatcher dispatcher = request.getRequestDispatcher("transaction.jsp");
-					request.setAttribute("total", String.valueOf(cost_of_trans)+" $ + Additional commission charges as applicable");
-					dispatcher.forward( request, response );
-					//if cah
-					if(commission_type == 1){
-						ps = con1.prepareStatement(ins_hist);
-						ps.setInt(1, client_id);//cliendt id
-						ps.setInt(2, tid);// trader id
-						ps.setInt(3, x);//transaction_id
-						ps.setDate(4, x);//date
-						ps.setDouble(5, x);//cost_of transaction
-						ps.setDouble(6, x);//com_charge
-						
-					}
-					//oil
-					else{
-						
-						
-					}
-					
-					
-					}
-			  	}
-			}
-			
-			
-			else{
-				
-				System.out.println("Not enough cash balance- contact helpdesk");
-				RequestDispatcher rd = getServletContext().getRequestDispatcher("/transaction.jsp");
-				PrintWriter out = response.getWriter();
-				out.println("<font size=\"6\" color=red>Not enough cash balance- contact helpdesk : 1(800)-(oil)-(tran)</font>");
-				rd.include(request, response);
-				
-			}
-			
-			
-			
-		}
-		else if(buysell.equals("s")){
-			//check oil balance
-			if(client_oil_bal >= quantity){
-				
-				ps = con1.prepareStatement(ins_query , Statement.RETURN_GENERATED_KEYS);
-				ps.setDouble(1, quantity);
-				ps.setString(2, buysell);
-				ps.setDouble(3, cost_of_trans);
-				ps.setInt(4, commission_type);
-				
-				
-					if(ps.execute()){
-						
-						rs = ps.getGeneratedKeys();
-						if(rs.next()){
-							int tid = rs.getInt(1);
-							session.setAttribute("transaction_id", tid);
-						}
-				}else{
-						
-						rs = ps.getGeneratedKeys();
-						if(rs.next()){
-						tid = rs.getInt(1);
-						session.setAttribute("transaction_id", tid);
-						RequestDispatcher dispatcher = request.getRequestDispatcher("transaction.jsp");
-						request.setAttribute("total", String.valueOf(cost_of_trans)+" $ additional commission charges as applicable");
-						dispatcher.forward( request, response );
-						
-						}
-				  	}
-				
-			}
-			else{
-				//not enough oil to sell
-				System.out.println("Not enough Oil Balance to sell- contact helpdesk");
-				RequestDispatcher rd = getServletContext().getRequestDispatcher("/transaction.jsp");
-				PrintWriter out = response.getWriter();
-				out.println("<font size=\"6\" color=red>Not enough Oil Balance in your account - contact helpdesk : 1(800)-(oil)-(tran)</font>");
-				rd.include(request, response);
-				
-			}
-			
-			
-		 }
-		
-		
-			
-		} catch (Exception e) {
-			
-			e.printStackTrace();
-			
-			System.out.println("Exception "+e);
-		}
-		
-		*/
-		
 	}
-
-
 }

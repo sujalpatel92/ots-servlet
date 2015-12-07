@@ -69,8 +69,8 @@
 									<select class="form-control" id="searchby" name="searchby"
 										onchange="updateCommision(this)">
 										<option value="1">Client ID</option>
-										<option value="2">Address</option>
-										<option value="3">Zipcode</option>
+										<option value="2"> Street Address</option>
+										<option value="3">ZipCode</option>
 									</select>
 								</div>
 							</div>
@@ -80,11 +80,11 @@
 							</div>
 							<div class="col-sm-9" style="display: none;" id="choice2">
 								<input type="text" name="caddress" id="caddress"
-									class="form-control" placeholder="Enter Client Address">
+									class="form-control" placeholder="Enter Client Street Address">
 							</div>
 							<div class="col-sm-9" style="display: none;" id="choice3">
 								<input type="text" name="czip" id="czip" class="form-control"
-									placeholder="Enter Client Zipcode">
+									placeholder="Enter Client ZipCode">
 							</div>
 							<br> <br>
 							<div class="col-sm-4">

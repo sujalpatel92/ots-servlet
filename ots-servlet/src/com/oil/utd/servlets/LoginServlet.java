@@ -24,6 +24,11 @@ import com.oil.utd.util.Login;
 
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	int cID;
 	int tID;
 	String trader_name;
@@ -34,6 +39,7 @@ public class LoginServlet extends HttpServlet {
 
 	}
 
+	@SuppressWarnings("resource")
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		String userid = request.getParameter("user");
@@ -94,10 +100,14 @@ public class LoginServlet extends HttpServlet {
 					statement1.setInt(1, Integer.parseInt(userid));
 					set1 = statement1.executeQuery();
 					if(set1!=null && set1.next()){
-						if(set1.getString(1).equals("Gold"))
+						if(set1.getString(1).equals("Gold")){
 							session.setAttribute("com_rate", 0.10);
-						else
+							session.setAttribute("com_level", "Gold");
+						}
+						else{
 							session.setAttribute("com_rate", 0.20);
+							session.setAttribute("com_level", "Silver");
+						}
 					}
 					
 					
@@ -107,12 +117,22 @@ public class LoginServlet extends HttpServlet {
 					statement1.setInt(1, Integer.parseInt(userid));
 					set1 = statement1.executeQuery();
 					if(set1!=null && set1.next()){
-					 
-					session.setAttribute("oil_balance", set1.getString(1));
-					System.out.println("Oil bal "+set1.getString(1));
+						session.setAttribute("oil_balance", set1.getString(1));
+						System.out.println("Oil bal "+set1.getString(1));
 					//response.sendRedirect("home.jsp");
-					response.sendRedirect("client_home.jsp");
 					}
+					String getCashOwedTotal = "select SUM(Cash_owed),SUM(Cash_paid) from  transaction where dues_settled ='N' and Cid =?";
+					double cash;
+					statement1 = con.prepareStatement(getCashOwedTotal);
+					statement1.setInt(1, Integer.parseInt(userid));
+					set1 = statement1.executeQuery();
+					if(set1!=null && set1.next())
+					{
+						cash = set1.getDouble(1) - set1.getDouble(2);
+						System.out.println("Cash owed: "+cash);
+						session.setAttribute("cash_left", (float)cash);
+					}
+					response.sendRedirect("client_home.jsp");
 					
 					
 					

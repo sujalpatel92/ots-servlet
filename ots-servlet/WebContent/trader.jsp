@@ -48,7 +48,7 @@ out.println(traderName);%>
 						<a href="approve_trans.jsp" role="button" class="btn btn-primary btn-large">Accept/Reject a Transaction</a>
 						<br>
 						<br>
-<!-- 						<a href="search.jsp" role="button" class="btn btn-primary btn-large">Search Client</a> -->
+						<a href="search.jsp" role="button" class="btn btn-primary btn-large">Search Client</a>
                         <!-- <h4 id=" status"> Account Type :</h4> -->
 						
 						

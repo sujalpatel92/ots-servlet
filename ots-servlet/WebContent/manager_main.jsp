@@ -59,6 +59,13 @@
 								</td>
 								</tr>
 								<tr>
+									<td>
+									 	<input type="radio" name="myradio" value="0" required/>Daily
+        								<input type="radio" name="myradio" value="1" required/>Weekly
+        								<input type="radio" name="myradio" value="2" required/>Monthly
+        							</td>
+								</tr>
+								<tr>
 									<td><td>
 									<td>
 										<div class="col-sm-10">
@@ -80,6 +87,22 @@
 </head>
 </body>
 
+<!-- <table class="table table-bordered table-condensed table-stripped""> -->
+<!--             column headers -->
+<!--             <tr> -->
+<%--                 <c:forEach var="columnName" items="${summary.columnNames}"> --%>
+<%--                     <th><c:out value="${columnName}"/></th> --%>
+<%--                 </c:forEach> --%>
+<!--             </tr> -->
+<!--             column data -->
+<%--             <c:forEach var="row" items="${summary.rowsByIndex}"> --%>
+<!--                 <tr> -->
+<%--                     <c:forEach var="column" items="${row}"> --%>
+<%--                         <td><c:out value="${column}"/></td> --%>
+<%--                     </c:forEach> --%>
+<!--                 </tr> -->
+<%--             </c:forEach> --%>
+<!--     </table> -->
 
 	<table class="table table-bordered table-condensed table-stripped"">
             <!-- column headers -->
@@ -96,6 +119,6 @@
                     </c:forEach>
                 </tr>
             </c:forEach>
-        </table>
+    </table>
 
 </html>

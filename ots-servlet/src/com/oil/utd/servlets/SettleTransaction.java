@@ -21,7 +21,12 @@ import org.apache.commons.lang.ArrayUtils;
  */
 @WebServlet("/settletransaction")
 public class SettleTransaction extends HttpServlet {
-       int client_id;
+       /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	int client_id;
        int set_one_settledflag;
        //ArrayList<Integer> tlist ;
       // String query = "SELECT date,t.id transaction_id,t.quantity,(CASE WHEN buy_sell like 'b%' THEN \"Bought\" ELSE \"Sold\" END) As Buy_Sell, t.cost_of_transaction,h.com_charge, (CASE WHEN commission_type <> 0 THEN 'Cash' ELSE 'Oil' END) As Comission_Mode,\r\n(CASE \r\nWHEN h.settled_flag = 1 THEN 'Check view status'\r\nWHEN h.settled_flag = 0 THEN 'Applied'\r\nWHEN h.settled_flag = 2 THEN 'Accpeted'\r\nWHEN h.settled_flag = 3 THEN 'Rejected'\r\nEND\r\n)As Settlement FROM transaction t, client_trader_transaction_history h where t.id=h.transaction_id and client_id=? and h.settled_flag in (0,1)";

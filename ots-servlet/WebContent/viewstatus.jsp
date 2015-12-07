@@ -31,7 +31,7 @@ pst=null;
 rs=null;
 
 HttpSession s1 = request.getSession();
-String client_id= s1.getAttribute("Client_name").toString();
+String client_id= s1.getAttribute("User").toString();
 
 // Remember to change the next line with your own environment 
 String url= 
@@ -49,13 +49,11 @@ cnf.printStackTrace();
 }
 
 
-String sql = "SELECT date,t.id transaction_id,t.quantity,(CASE WHEN buy_sell like 'b%' THEN \"Bought\" ELSE \"Sold\" END) As Buy_Sell, t.cost_of_transaction,h.com_charge, (CASE WHEN comtype <> 0 THEN 'Cash' ELSE 'Oil' END) As Comission_Mode,\r\n(CASE \r\nWHEN h.settled_flag = 2 THEN 'Accepted'\r\n WHEN h.settled_flag = 1 THEN 'Applied for st'\r\nWHEN h.settled_flag = 0 THEN 'Settle this in settle dues'\r\nWHEN h.settled_flag = 3 THEN 'Rejected'\r\nEND\r\n)As Settlement FROM transaction t, client_trader_transaction_history h where t.id=h.transaction_id and client_id=?";
+String sql = "SELECT t.Trans_date, t.Transid, t.Oil_amt,(CASE WHEN t.Trans_type like '0' THEN \"Bought\" ELSE \"Sold\" END), h.Commision_amount, (CASE WHEN h.commision_type <> 1 THEN 'Cash' ELSE 'Oil' END), t.Status FROM transaction t, commision h where t.Transid=h.Transid and Cid=?";
 try{
 pst = con.prepareStatement(sql);
-pst.setInt(1, Integer.valueOf(request.getSession().getAttribute("Client_name").toString()));
+pst.setInt(1, Integer.valueOf(request.getSession().getAttribute("User").toString()));
 rs = pst.executeQuery();
-
-
 %>
 
 <div class="container-fluid">
@@ -68,7 +66,7 @@ rs = pst.executeQuery();
    <th>Transaction ID</th>
    <th>Quantity</th>
    <th>Bought_Or_Sold</th>
-   <th>Cost</th>
+<!--    <th>Cost</th> -->
    <th>Commission</th>
    <th>Comission_Mode</th>
    <th>Accepted/Rejected</th>
@@ -79,14 +77,14 @@ while( rs!=null && rs.next() ){
 %>
 <tr>
 
-	<td><%= rs.getTimestamp(1) %></td>
+	<td><%= rs.getDate(1) %></td>
 	<td><%= rs.getInt(2) %></td>
 	<td><%= rs.getDouble(3) %></td>
 	<td><%= rs.getString(4) %></td>
-	<td><%= rs.getDouble(5) %></td>
-	<td><%= rs.getDouble(6) %></td>
+<%-- 	<td><%= rs.getDouble(5) %></td> --%>
+	<td><%=(float)rs.getDouble(5) %></td>
+	<td><%= rs.getString(6) %></td>
 	<td><%= rs.getString(7) %></td>
-	<td><%= rs.getString(8) %></td>
 
 </tr>
 <%

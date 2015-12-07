@@ -6,6 +6,7 @@ public class Transaction {
     private int buyORsell;
     private int commissionType;
     private double transCost;
+    private double commissionRate;
 	
 	public int getId() {
 		return id;
@@ -37,5 +38,11 @@ public class Transaction {
 	}
 	public void setCommissionType(int comtype) {
 		this.commissionType = comtype;
+	}
+	public double getCommissionRate() {
+		return commissionRate;
+	}
+	public void setCommissionRate(double commissionRate) {
+		this.commissionRate = commissionRate;
 	}
 }
