@@ -82,7 +82,9 @@ public class Search extends HttpServlet {
 			  cadd = request.getParameter("caddress").toString();
 			  System.out.println("entering 2");
 			  ps = con1.prepareStatement(searchByAddress);
-			  ps.setString(1, "'%" +cadd +"%'");
+			  ps.setString(1, "%" +cadd +"%");
+			  System.out.println("%" +cadd +"%");
+			  
 			  rs = ps.executeQuery();
 			  System.out.println(cadd);
 
@@ -106,7 +108,7 @@ public class Search extends HttpServlet {
 				czip = request.getParameter("czip").toString();
 			  System.out.println("entering 3");
 			  ps = con1.prepareStatement(searchByZip); 
-			  ps.setString(1, "%" +czip +"%");
+			  ps.setInt(1,Integer.valueOf(czip));
 			  rs = ps.executeQuery();
 		  
 		  System.out.println("Result" + rs.toString());

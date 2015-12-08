@@ -125,6 +125,16 @@ public class Approve_Trans extends HttpServlet {
 							System.out.println("Could not accpect-- some error check soon");
 						}
 						
+//						Update client set Level = 'Gold' where level='Silver' and Cid in (select cid from transaction where Status='Approved' group by cid, month(Trans_date) having sum(oil_amt)>30);
+						
+						ps = con.prepareStatement("Update client set Level = 'Gold' where Level='Silver' and Cid in (select Cid from transaction where Status='Approved' group by cid, month(Trans_date) having sum(oil_amt)>30)");
+//						ps.setInt(1, trader_id);
+//						ps.setInt(2, transaction_id);
+						if(ps.execute()){
+							System.out.println("Could not accpect-- some error check soon");
+						}
+						
+						
 					}
 					catch (SQLException e) {
 						System.out.println("Error here!!");
@@ -155,6 +165,13 @@ public class Approve_Trans extends HttpServlet {
 						ps = con.prepareStatement("update transaction set Trader_id = ? where Transid =?");
 						ps.setInt(1, trader_id);
 						ps.setInt(2, transaction_id);
+						if(ps.execute()){
+							System.out.println("Could not accpect-- some error check soon");
+						}
+						
+						ps = con.prepareStatement("Update client set Level = 'Gold' where Level='Silver' and Cid in (select Cid from transaction where Status='Approved' group by cid, month(Trans_date) having sum(oil_amt)>30)");
+//						ps.setInt(1, trader_id);
+//						ps.setInt(2, transaction_id);
 						if(ps.execute()){
 							System.out.println("Could not accpect-- some error check soon");
 						}
@@ -210,6 +227,13 @@ public class Approve_Trans extends HttpServlet {
 							System.out.println("Could not accpect-- some error check soon");
 						}
 						
+						ps = con.prepareStatement("Update client set Level = 'Gold' where Level='Silver' and Cid in (select Cid from transaction where Status='Approved' group by cid, month(Trans_date) having sum(oil_amt)>30)");
+//						ps.setInt(1, trader_id);
+//						ps.setInt(2, transaction_id);
+						if(ps.execute()){
+							System.out.println("Could not accpect-- some error check soon");
+						}
+						
 					}
 					catch (SQLException e) {
 						System.out.println("Error here!!");
@@ -238,6 +262,13 @@ public class Approve_Trans extends HttpServlet {
 						ps = con.prepareStatement("update transaction set Trader_id = ? where Transid =?");
 						ps.setInt(1, trader_id);
 						ps.setInt(2, transaction_id);
+						if(ps.execute()){
+							System.out.println("Could not accpect-- some error check soon");
+						}
+						
+						ps = con.prepareStatement("Update client set Level = 'Gold' where Level='Silver' and Cid in (select Cid from transaction where Status='Approved' group by cid, month(Trans_date) having sum(oil_amt)>30)");
+//						ps.setInt(1, trader_id);
+//						ps.setInt(2, transaction_id);
 						if(ps.execute()){
 							System.out.println("Could not accpect-- some error check soon");
 						}

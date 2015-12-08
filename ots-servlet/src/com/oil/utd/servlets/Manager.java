@@ -22,12 +22,17 @@ import javax.servlet.jsp.jstl.sql.ResultSupport;
  */
 @WebServlet("/manager")
 public class Manager extends HttpServlet {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	String mgr_query = "SELECT * FROM transaction WHERE (Trans_date >= ? AND Trans_date <= ?)";
 	Date fromdate;
 	Date todate;
-	String daily_summary = "SELECT Trans_date, SUM(Cash_paid),SUM(Oil_amt), SUM(Cash_owed) FROM transaction WHERE (Trans_date >= ? AND Trans_date <= ?) GROUP BY Trans_date";
-	String weekly_summary = "select week(Trans_date) ,sum(Cash_paid),sum(Oil_amt), sum(Cash_owed) from transaction where (Trans_date >= ? AND Trans_date <= ?) group by week(Trans_date)";
-	String monthly_summary = "select month(Trans_date),sum(Cash_paid),sum(Oil_amt), sum(Cash_owed) from transaction where (Trans_date >= ? AND Trans_date <= ?) group by month(Trans_date)";
+	String daily_summary = "SELECT Trans_date AS Date, CAST(SUM(Cash_paid) AS DECIMAL(5,2)) AS 'Total Cash Paid', CAST(SUM(Oil_amt) AS DECIMAL(5,2)) AS 'Total Oil Amount', CAST(SUM(Cash_owed) AS DECIMAL(5,2)) AS 'Total Cash Owed' FROM transaction WHERE (Trans_date >= ? AND Trans_date <= ?) GROUP BY Trans_date";
+	String weekly_summary = "select week(Trans_date) AS Week,cast(sum(Cash_paid) AS DECIMAL(5,2)) AS 'Total Cash Paid',cast(sum(Oil_amt) AS DECIMAL(5,2)) as 'Total Oil Amount', cast(sum(Cash_owed) AS DECIMAL(5,2)) AS 'Total Cash Owed' from transaction where (Trans_date >= ? AND Trans_date <= ?) group by week(Trans_date)";
+	String monthly_summary = "select month(Trans_date) as Month,CAST(SUM(Cash_paid) AS DECIMAL(5,2)) AS 'Total Cash Paid', CAST(SUM(Oil_amt) AS DECIMAL(5,2)) AS 'Total Oil Amount', CAST(SUM(Cash_owed) AS DECIMAL(5,2)) AS 'Total Cash Owed' from transaction where (Trans_date >= ? AND Trans_date <= ?) group by month(Trans_date)";
 	
     /**
      * @see HttpServlet#HttpServlet()
@@ -58,34 +63,34 @@ public class Manager extends HttpServlet {
 			fromdate = Date.valueOf(frm);
 			todate = Date.valueOf(to);
 			
-//			switch(roleInp)
-//			{
-//				case 0:
-//					ps = con1.prepareStatement(daily_summary);
-//					ps.setDate(1, fromdate);
-//					ps.setDate(2, todate);
-//					rs = ps.executeQuery();
-//					System.out.println("Daily summary"+ rs.toString());
-//					break;
-//				case 1:
-//					ps = con1.prepareStatement(weekly_summary);
-//					ps.setDate(1, fromdate);
-//					ps.setDate(2, todate);
-//					rs = ps.executeQuery();
-//					System.out.println("weekly summary"+ rs.toString());
-//					break;
-//				case 2:
-//					ps = con1.prepareStatement(monthly_summary);
-//					ps.setDate(1, fromdate);
-//					ps.setDate(2, todate);
-//					rs = ps.executeQuery();
-//					System.out.println("monthly summary"+ rs.toString());
-//					break;
-//			}
-//			
-//			Result res = ResultSupport.toResult(rs);
-//			request.setAttribute("summary", res);
-//			
+			switch(roleInp)
+			{
+				case 0:
+					ps = con1.prepareStatement(daily_summary);
+					ps.setDate(1, fromdate);
+					ps.setDate(2, todate);
+					rs = ps.executeQuery();
+					System.out.println("Daily summary"+ rs.toString());
+					break;
+				case 1:
+					ps = con1.prepareStatement(weekly_summary);
+					ps.setDate(1, fromdate);
+					ps.setDate(2, todate);
+					rs = ps.executeQuery();
+					System.out.println("weekly summary"+ rs.toString());
+					break;
+				case 2:
+					ps = con1.prepareStatement(monthly_summary);
+					ps.setDate(1, fromdate);
+					ps.setDate(2, todate);
+					rs = ps.executeQuery();
+					System.out.println("monthly summary"+ rs.toString());
+					break;
+			}
+			
+			Result res = ResultSupport.toResult(rs);
+			request.setAttribute("summary", res);
+
 			ps = con1.prepareStatement(mgr_query);
 			ps.setDate(1, fromdate);
 			ps.setDate(2, todate);

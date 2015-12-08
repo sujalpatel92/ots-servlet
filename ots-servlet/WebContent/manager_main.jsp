@@ -87,22 +87,22 @@
 </head>
 </body>
 
-<!-- <table class="table table-bordered table-condensed table-stripped""> -->
+<table class="table table-bordered table-condensed table-stripped"">
 <!--             column headers -->
-<!--             <tr> -->
-<%--                 <c:forEach var="columnName" items="${summary.columnNames}"> --%>
-<%--                     <th><c:out value="${columnName}"/></th> --%>
-<%--                 </c:forEach> --%>
-<!--             </tr> -->
+            <tr>
+                <c:forEach var="columnName" items="${summary.columnNames}">
+                    <th><c:out value="${columnName}"/></th>
+                </c:forEach>
+            </tr>
 <!--             column data -->
-<%--             <c:forEach var="row" items="${summary.rowsByIndex}"> --%>
-<!--                 <tr> -->
-<%--                     <c:forEach var="column" items="${row}"> --%>
-<%--                         <td><c:out value="${column}"/></td> --%>
-<%--                     </c:forEach> --%>
-<!--                 </tr> -->
-<%--             </c:forEach> --%>
-<!--     </table> -->
+            <c:forEach var="row" items="${summary.rowsByIndex}">
+                <tr>
+                    <c:forEach var="column" items="${row}">
+                        <td><c:out value="${column}"/></td>
+                    </c:forEach>
+                </tr>
+            </c:forEach>
+    </table>
 
 	<table class="table table-bordered table-condensed table-stripped"">
             <!-- column headers -->

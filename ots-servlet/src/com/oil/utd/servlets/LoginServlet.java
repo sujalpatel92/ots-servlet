@@ -44,10 +44,10 @@ public class LoginServlet extends HttpServlet {
 			HttpServletResponse response) throws ServletException, IOException {
 		String userid = request.getParameter("user");
 		String password = request.getParameter("pwd");
-		int roleInp = Integer.parseInt(request.getParameter("myradio"));
+		int roleInp = Integer.parseInt(request.getParameter("roleradio"));
 		int role;
 		System.out.println(request.getParameter("user") + " "
-				+ request.getParameter("pwd")+ request.getParameter("myradio"));
+				+ request.getParameter("pwd")+ request.getParameter("roleradio"));
 
 		con = (Connection) getServletContext().getAttribute(
 				"DBConnection");
@@ -73,6 +73,8 @@ public class LoginServlet extends HttpServlet {
 					out.println("<font color=red>Incorrect role selected.Please try again.</font>");
 					rd1.include(request, response);
 				}
+				else
+				{
 				login.setRoleType(set1.getInt(3));
 				System.out.println("Logged User: " + login.toString()
 						+ "Client id : ");
@@ -155,7 +157,9 @@ public class LoginServlet extends HttpServlet {
 					//manager
 					response.sendRedirect("manager_main.jsp");
 				}
-			} else {
+			} 
+			}
+			else {
 				RequestDispatcher rd = getServletContext()
 						.getRequestDispatcher("/index.jsp");
 				PrintWriter out = response.getWriter();

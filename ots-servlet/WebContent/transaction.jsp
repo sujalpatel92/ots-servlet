@@ -103,8 +103,8 @@ String com_rate = s1.getAttribute("com_rate").toString();
                 
 						<div class="col-sm-3">							
 								<select class="form-control" id="buysell" name="buysell" onchange="updateBuy(this)" >
-										<option value="Buy">Buy</option>
-										<option value="Sell">Sell</option>
+										<option value="Buy">Sell</option>
+										<option value="Sell">Buy</option>
 								</select>
 						</div>
 						<div class="col-sm-7">
