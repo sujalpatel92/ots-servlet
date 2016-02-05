@@ -1,0 +1,14 @@
+update client set oil_owned=39 where cid=1;
+update client set oil_owned=46 where cid=2;
+update client set oil_owned=65 where cid=3;
+update client set oil_owned=5 where cid=4;
+update client set oil_owned=33 where cid=5;
+update client set oil_owned=12 where cid=6;
+update client set oil_owned=70 where cid=7;
+update client set oil_owned=63 where cid=8;
+update client set oil_owned=14 where cid=9;
+update client set oil_owned=69 where cid=10;
+update client set oil_owned=87 where cid=11;
+update client set oil_owned=6 where cid=12;
+update client set oil_owned=65 where cid=13;
+update client set oil_owned=30 where cid=14;
